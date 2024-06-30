@@ -1,8 +1,10 @@
-import AdmZip from "adm-zip";
-import { MarkdownString } from "vscode";
+import { ExtensionContext, Uri } from "vscode";
+import { readFileSync } from "fs";
 
-export const IconNameAttrName = 'icon-name';
-export const IconNameAttrNameMatcher = new RegExp(`${IconNameAttrName}="\\w+:\\w+"`);
+export const IconNameAttrName = "icon-name";
+export const IconNameAttrNameMatcher = new RegExp(
+    `${IconNameAttrName}="\\w+:\\w+"`
+);
 export function extractIconName(text: string): string | null {
     // Regular expression to match the pattern icon-name="<value>"
     const regex = new RegExp(`${IconNameAttrName}="([^"]+)"`);
@@ -12,13 +14,19 @@ export function extractIconName(text: string): string | null {
     }
     return null;
 }
-function getIconFileName(iconName: string) {
-    return `${iconName.replace(":", "/")}.svg`;
-}
-export function getIconSvgContent(iconName: string, reader: AdmZip) {
-    const iconFileName = getIconFileName(iconName);
-    const iconFile = reader.getEntry(iconFileName);
-    if (!iconFile) { return null; }
-    const data = iconFile.getData().toString('utf-8');
-    return data;
+export function getIconSvgContent(
+    iconName: string,
+    context: ExtensionContext
+) {
+    const path = ["static", "salesforce-lightning-design-system-icons", ...`${iconName}.svg`.split(":")];
+    try {
+        return readFileSync(
+            Uri.joinPath(context.extensionUri, ...path)
+                .fsPath,
+            "utf-8"
+        );
+    } catch (error) {
+        console.error('no such icon found', iconName);
+        return null;
+    }
 }
