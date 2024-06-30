@@ -1,26 +1,39 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { IconNameAttrName, IconNameAttrNameMatcher, extractIconName, getIconSvgContent } from './util';
+import { getZipReader } from './zip';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "slds-icons" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('slds-icons.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from SLDS Icons!');
+	console.debug('slds-icon extension activated!');
+	const provider = vscode.languages.registerHoverProvider('html', {
+		provideHover(document, position, token) {
+			const range = document.getWordRangeAtPosition(position, IconNameAttrNameMatcher);
+			if (!range) { return null; }
+			const word = document.getText(range);
+			if (!word.startsWith(`${IconNameAttrName}`)) { return null; }
+			const iconName = extractIconName(word);
+			if (!iconName) { return null; }
+			const zipReader = getZipReader(context);
+			if (!zipReader) { return null; }
+			const iconSvgContent = getIconSvgContent(iconName, zipReader);
+			if (!iconSvgContent) {
+				const markdown = new vscode.MarkdownString(`⚠ Invalid Icon \`${iconName}\``);
+				markdown.isTrusted = true;
+				return new vscode.Hover(markdown, range);
+			}
+			const encodedSvg = encodeURIComponent(iconSvgContent).replace(/'/g, "%27").replace(/"/g, "%22");
+			const dataUrl = `data:image/svg+xml;charset=utf-8,${encodedSvg}`;
+			const markdown = new vscode.MarkdownString(`
+### \`${iconName}\`
+![${iconName}](${dataUrl})
+`);
+			markdown.isTrusted = true;
+			return new vscode.Hover(markdown, range);
+		}
 	});
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(provider);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	console.debug('slds-icon extension deactivated!');
+}
