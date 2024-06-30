@@ -1,11 +1,12 @@
 {
   "name": "slds-icons",
   "displayName": "SLDS Icons",
-  "description": "Provides autocomplete and preview feature for lightning design system icons.",
+  "description": "Provides preview feature for lightning design system icons.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.86.0"
   },
+  "icon": "./static/icon.png",
   "categories": [
     "Other"
   ],
