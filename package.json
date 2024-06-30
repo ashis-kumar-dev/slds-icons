@@ -7,6 +7,9 @@
     "vscode": "^1.86.0"
   },
   "icon": "./static/icon.png",
+  "repository": {
+    "url": "https://github.com/ashis-kumar-dev/slds-icons"
+  },
   "categories": [
     "Other"
   ],
