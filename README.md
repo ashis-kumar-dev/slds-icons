@@ -5,7 +5,9 @@ Shows you a preview of the salesforce lightning design system icon, so that you 
 ## Features
 
 - Shows preview for the icon, if its valid
+  ![Icon Preview](static/icon-preview.png)
 - Shows a message on hover, if the icon name is not valid
+  ![Icon Preview](static/invalid-icon-preview.png)
 
 ## Requirements
 
