@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "slds-icons" extension will be documented in this file.
+## [2024-06-30]
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- First release
+- Provides preview for valid icon names on hover
+- Shows if an icon is invalid on hove
