@@ -19,7 +19,7 @@ None as of now.
 
 ## Known Issues
 
-For any issues you see, please report it [here]('https://github.com/ashis-kumar-dev/slds-icons/issues')
+For any issues you see, please report it [here](https://github.com/ashis-kumar-dev/slds-icons/issues)
 
 ## Release Notes
 
